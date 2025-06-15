@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розыгрыши</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Главное меню -->
+        <div id="main-menu" class="screen active">
+            <div class="header">
+                <h1>🎉 Розыгрыши</h1>
+                <div class="user-info">
+                    <span id="user-name">Загрузка...</span>
+                    <div class="balance">💰 <span id="user-balance">0</span> билетов</div>
+                </div>
+            </div>
+
+            <div class="menu-buttons">
+                <button class="menu-btn primary" onclick="showScreen('giveaways')">
+                    🎟 Участвовать в розыгрыше
+                </button>
+                <button class="menu-btn" onclick="showScreen('earn')">
+                    💰 Заработать билеты
+                </button>
+                <button class="menu-btn" onclick="showScreen('profile')">
+                    👤 Личный кабинет
+                </button>
+                <button class="menu-btn" onclick="showScreen('help')">
+                    ℹ Помощь
+                </button>
+                <div id="admin-buttons" class="admin-section" style="display: none;">
+                    <button class="menu-btn admin" onclick="showStatistics()">📊 Статистика</button>
+                    <button class="menu-btn admin" onclick="showGiveawayManagement()">🔧 Управление розыгрышами</button>
+                    <button class="menu-btn admin" onclick="showUserManagement()">👥 Управление пользователями</button>
+                    <button class="menu-btn admin" onclick="showCreateGiveawayForm()">🎫 Создать розыгрыш</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран розыгрышей -->
+        <div id="giveaways" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('main-menu')">🔙</button>
+                <h2>Активные розыгрыши</h2>
+            </div>
+            <div id="giveaways-list" class="content">
+                <div class="loading">Загрузка розыгрышей...</div>
+            </div>
+        </div>
+
+        <!-- Экран заработка -->
+        <div id="earn" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('main-menu')">🔙</button>
+                <h2>Заработать билеты</h2>
+            </div>
+            <div class="content">
+                <div class="earn-option">
+                    <div class="earn-icon">📸</div>
+                    <div class="earn-info">
+                        <h3>Сделай сторис</h3>
+                        <p>Получи +50 билетов</p>
+                        <small>Опубликуй сторис о нашем боте</small>
+                    </div>
+                    <button class="earn-btn" onclick="showStoryInstructions()">Начать</button>
+                </div>
+
+                <div class="earn-option">
+                    <div class="earn-icon">📢</div>
+                    <div class="earn-info">
+                        <h3>Подпишись на каналы</h3>
+                        <p>Получи +10 билетов</p>
+                        <small id="subscription-status">Проверяем подписки...</small>
+                    </div>
+                    <button class="earn-btn" id="subscription-btn" onclick="showChannels()">Подписаться</button>
+                </div>
+
+                <div class="earn-option">
+                    <div class="earn-icon">👥</div>
+                    <div class="earn-info">
+                        <h3>Пригласи друга</h3>
+                        <p>Получи +1 билет</p>
+                        <small id="referral-stats">Приглашено: 0 друзей</small>
+                    </div>
+                    <button class="earn-btn" onclick="showReferral()">Пригласить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран личного кабинета -->
+        <div id="profile" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('main-menu')">🔙</button>
+                <h2>Личный кабинет</h2>
+            </div>
+            <div class="content">
+                <div class="profile-card">
+                    <div class="profile-info">
+                        <div class="avatar">👤</div>
+                        <div>
+                            <h3 id="profile-name">Загрузка...</h3>
+                            <p id="profile-id">ID: ...</p>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="profile-balance">0</span>
+                            <span class="stat-label">Билетов</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="profile-giveaways">0</span>
+                            <span class="stat-label">Участий</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="action-btn" onclick="showScreen('my-tickets')">
+                        🎫 Мои билеты
+                    </button>
+                    <button class="action-btn" onclick="showScreen('past-giveaways')">
+                        📜 История участий
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран помощи -->
+        <div id="help" class="screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('main-menu')">🔙</button>
+                <h2>Помощь</h2>
+            </div>
+            <div class="content">
+                <div class="help-section">
+                    <h3>🎫 Как получить билеты:</h3>
+                    <ul>
+                        <li>Сделайте сторис (+50 билетов)</li>
+                        <li>Подпишитесь на каналы (+10 билетов)</li>
+                        <li>Пригласите друзей (+1 билет за каждого)</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>🎯 Как участвовать в розыгрышах:</h3>
+                    <ul>
+                        <li>Выберите активный розыгрыш</li>
+                        <li>Потратьте билеты на участие</li>
+                        <li>Дождитесь завершения розыгрыша</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3>💡 Полезные советы:</h3>
+                    <ul>
+                        <li>Билеты за подписки сгорают через 15 дней</li>
+                        <li>Можно участвовать несколькими билетами</li>
+                        <li>Следите за новыми розыгрышами</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальные окна -->
+        <div id="modal" class="modal" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Уведомления -->
+        <div id="notifications"></div>
+    </div>
+
+    <!-- Модальное окно создания розыгрыша -->
+    <div id="create-giveaway-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideCreateGiveawayModal()">&times;</span>
+            <h2>🎁 Создать новый розыгрыш</h2>
+            
+            <div class="form-group">
+                <label for="giveaway-name">Название розыгрыша:</label>
+                <input type="text" id="giveaway-name" placeholder="Введите название...">
+            </div>
+            
+            <div class="form-group">
+                <label for="giveaway-description">Описание:</label>
+                <textarea id="giveaway-description" placeholder="Введите описание розыгрыша..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="giveaway-end-date">Дата окончания:</label>
+                <input type="datetime-local" id="giveaway-end-date">
+            </div>
+            
+            <div class="modal-buttons">
+                <button onclick="createGiveaway()" class="button success">✅ Создать</button>
+                <button onclick="hideCreateGiveawayModal()" class="button cancel">❌ Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
